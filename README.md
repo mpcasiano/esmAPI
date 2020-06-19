@@ -4,7 +4,7 @@
 
 ## Overview
 
-This API manages the ESM database and handle the HTTP requests from web and mobile applications. It accepts JSON as well as form-data format in request bodies and returns JSON-encoded responses with standard HTTP response codes.
+This API manages the ESM database and handles the HTTP requests from web and mobile applications. It accepts JSON as well as form-data format in request bodies and returns JSON-encoded responses with standard HTTP response codes.
 
 * [Authentication](#Authentication)
 * [HTTP Response Status Codes](#HTTP-Response-Status-Code)
@@ -34,7 +34,7 @@ Each request requires a token (except for sign in and sign up)
 
 ### Sign in 
 > `POST` https://esm-api.herokuapp.com/api/signin
-* Users log in to the app
+* Log in to the app
 * Returns a token
 
     `Headers` Content-Type: application/json
@@ -139,9 +139,9 @@ Each request requires a token (except for sign in and sign up)
         "desc":"This survey is for testing purposes only",
         "frequency": 0,
         "is_test": 0,
-        "start": "2019-12-18 07:30",
-        "end": "2019-12-18 12:30",
-        "is_shared": 0,
+        "start": "2020-12-18",
+        "end": "2020-12-19",
+        "is_shared": 1,
         "anonymity": 1,
         "sections": [
             {
@@ -151,15 +151,15 @@ Each request requires a token (except for sign in and sign up)
                 "order_id": 0,
                 "questions": [
                     {
-                        "inputType": 0,
+                        "inputType": 2,
                         "question": "Question ",
                         "description": null,
                         "is_required": 1,
                         "order_id": 0,
-                        "choices": null,
-                        "min": 1,
-                        "max": 5,
-                        "marks": null
+                        "choices": [
+                            "choice1",
+                            "choice2"
+                        ]
                     }
                 ]
             }
@@ -210,9 +210,10 @@ Each request requires a token (except for sign in and sign up)
 ----
 ## Mobile App Requests
 When fetching data from the API, consider these two cases:
-1. **userID** must be included if the user is supposed to be anonymous
-2. a **token** must be included if the user is supposed to be a client (assuming that the user is logged in)
-For example, a client (user with account) can answer a survey for anonymous respondents. In this case, the client should use a userID instead of token.
+1. **userID** must be included if the user is supposed to be **anonymous**.
+2. a **token** must be included if the user is supposed to be a **client**.
+
+For example, the clients (users with account) use their userIDs when they answer a survey that collects data from anonymous respondents. In this case, clients can be anonymized by using the userID instead of the token.
 
 ### Sign in 
 > `POST` https://esm-api.herokuapp.com/api/client/signin
@@ -243,8 +244,8 @@ For example, a client (user with account) can answer a survey for anonymous resp
 
     ```json
     {
-        "first_name": "testNew",
-        "last_name":  "testNew",
+        "first_name": "first",
+        "last_name":  "last",
         "email": "test@gmail.com",
         "username": "test"
     }
@@ -314,13 +315,13 @@ For example, a client (user with account) can answer a survey for anonymous resp
     ```json
     {
         "respondent_id": "43e5c60b-1fd2-4977-bca3-a286661d568f",
-        "survey_id": 231,
-        "timestamp": "2020-04-12 10:30",    
+        "survey_id": 1401,
+        "timestamp": "2020-05-12 10:30",    
         "answers": [
             {
-                "question_id": 1701,
+                "question_id": 3001,
                 "answer": [
-                    1
+                    "choice1"
                 ]
             }
         ]
@@ -339,12 +340,13 @@ For example, a client (user with account) can answer a survey for anonymous resp
     | survey_id | integer | First parameter |
     | user_id | string | Second parameter |
 
-    Sample link: https://esm-api.herokuapp.com/api/view-anonymous-answers/231/43e5c60b-1fd2-4977-bca3-a286661d568f 
+    Sample link: https://esm-api.herokuapp.com/api/view-anonymous-answers/1401/43e5c60b-1fd2-4977-bca3-a286661d568f 
 
 ----
 ### Save Responses (for clients)
 > `POST` https://esm-api.herokuapp.com/api/save-client-answers 
 * This request requires an authentication token (the user_id is not needed since the survey in this request is intended for clients and not for anonymous respondents).
+
     `Authorization` Bearer Token
 
     `Headers` Content-Type: application/json
@@ -353,13 +355,13 @@ For example, a client (user with account) can answer a survey for anonymous resp
 
     ```json
     {
-        "survey_id": 231,
-        "timestamp": "2020-04-10 10:32",
+        "survey_id": 1401,
+        "timestamp": "2020-05-12 10:32",
         "answers": [
             {
-                "question_id": 1701,
+                "question_id": 3001,
                 "answer": [
-                    1
+                    "choice2"
                 ]
             }
         ]
@@ -379,7 +381,7 @@ For example, a client (user with account) can answer a survey for anonymous resp
 
     `Authorization` Bearer Token
 
-    Sample link: https://esm-api.herokuapp.com/api/view-client-answers/231
+    Sample link: https://esm-api.herokuapp.com/api/view-client-answers/1401
 
 ---
 
@@ -388,8 +390,8 @@ For example, a client (user with account) can answer a survey for anonymous resp
 
 > Clone the files
 ```shell
-$ git clone https://github.com/mpcasiano/esm-api.git
-$ cd esm-api
+$ git clone https://github.com/mpcasiano/esmAPI.git
+$ cd esmAPI
 ```
 > Install dependencies
 ```shell
